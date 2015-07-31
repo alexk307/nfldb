@@ -65,6 +65,7 @@ def _get_overlay_columns(rows):
             lambda x: 'over_header' in str(x), rows)
     )
 
+
 def _get_active_columns(columns, sub_columns):
 
     sub_columns = filter(lambda x: x != '' and x not in columns, sub_columns)
@@ -105,8 +106,8 @@ def _get_active_columns(columns, sub_columns):
 
 
 def _strip_html(text):
-    TAG_RE = re.compile(r'<[^>]+>')
-    return TAG_RE.sub('', text)
+    tag_re = re.compile(r'<[^>]+>')
+    return tag_re.sub('', text)
 
 
 def parse_game_log(gamelog_url):
