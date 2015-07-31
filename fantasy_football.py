@@ -45,11 +45,9 @@ def get_active_players(first_letter):
         res = s.findAll('a')
         if res:
             player_list.append(
-                {
-                    'name': _strip_html(str(res[0])),
-                    'link': process_gamelog_url(res[0].get('href'), first_letter),
-                    'position': matched_position
-                }
+                {'name': _strip_html(str(res[0])),
+                 'link': process_gamelog_url(res[0].get('href'), first_letter),
+                 'position': matched_position}
             )
     return player_list
 
@@ -117,11 +115,18 @@ def parse_game_log(gamelog_url):
     parsed = soup.findAll('div',
                           {'class': 'table_container', 'id': 'div_stats'})
     if not parsed:
-        # Rookie
+        # No data, this is a rookie
         return []
-    sub_headers = map(lambda x: _strip_html(str(x)), parsed[0].findAll('thead')[0].findAll('th'))
+
+    sub_headers = map(
+        lambda x: _strip_html(str(x)),
+        parsed[0].findAll('thead')[0].findAll('th')
+    )
     headers = _get_overlay_columns(parsed[0].findAll('thead')[0].findAll('th'))
-    parsed_log = _parse_table_response(parsed[0].findAll('td'), _get_active_columns(headers, sub_headers))
+
+    parsed_log = \
+        _parse_table_response(parsed[0].findAll('td'),
+                              _get_active_columns(headers, sub_headers))
 
     # Don't return the last row as that has summary information
     return parsed_log[0:len(parsed_log) - 1]

@@ -41,9 +41,10 @@ class DatabaseHandler():
         return self._execute_query(query)
 
     def write_player(self, first_name, last_name, position, url):
-        query = """INSERT INTO players (first_name, last_name, position, url) VALUES ('%s', '%s', '%s', '%s')""" % \
+        query = """INSERT INTO players (first_name, last_name, position, url)
+                VALUES ('%s', '%s', '%s', '%s')""" % \
                 (escape(first_name),
-                escape(last_name),
-                escape(position),
-                escape(url))
+                 escape(last_name),
+                 escape(position),
+                 escape(url))
         return self._execute_query(query)

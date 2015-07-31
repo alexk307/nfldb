@@ -11,7 +11,8 @@ def consume(first_letter):
         last_name = player.get('name', '').split(' ')[1]
         position = player.get('position')
         url = player.get('link')
-        player_id = player_db.write_player(first_name, last_name, position, url)
+        player_id = player_db.write_player(
+            first_name, last_name, position, url)
         game_dict = parse_game_log(url)
         for game in game_dict:
             player_db.write_game(player_id, game)
