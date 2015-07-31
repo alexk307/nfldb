@@ -1,4 +1,3 @@
-import datetime
 import MySQLdb
 from re import escape
 
@@ -11,6 +10,7 @@ COLS = ['week', 'year', 'game_num', 'date', 'age', 'team', 'away', 'opp',
         'kick_ret_ypa', 'kick_ret_td', 'punt_ret', 'punt_ret_yds',
         'punt_ret_ypa', 'punt_ret_td', 'two_pt_con', 'pts', 'sack', 'tackle',
         'ast_tackle', 'games_started']
+
 
 class DatabaseHandler():
     def __init__(self):
@@ -35,21 +35,15 @@ class DatabaseHandler():
             if item not in COLS:
                 game_dict.pop(item, None)
 
-        query = """INSERT INTO games (player_id, %s) VALUES ('%s', '%s')""" % (','.join(game_dict.keys()), player_id, "','".join(game_dict.values()))
+        query = """INSERT INTO games (player_id, %s) VALUES ('%s', '%s')""" % \
+                (','.join(game_dict.keys()), player_id,
+                 "','".join(game_dict.values()))
         return self._execute_query(query)
 
     def write_player(self, first_name, last_name, position, url):
-        query =  """INSERT INTO players (first_name, last_name, position, url) VALUES ('%s', '%s', '%s', '%s')""" %\
-                 (escape(first_name),
-                  escape(last_name),
-                  escape(position),
-                  escape(url))
+        query = """INSERT INTO players (first_name, last_name, position, url) VALUES ('%s', '%s', '%s', '%s')""" % \
+                (escape(first_name),
+                escape(last_name),
+                escape(position),
+                escape(url))
         return self._execute_query(query)
-
-
-if __name__ == '__main__':
-    from fantasy_football import parse_game_log
-    res = parse_game_log('http://www.pro-football-reference.com/players/B/BellJo01/gamelog')
-    r = DatabaseHandler()
-    for game in res:
-        r.write_game('128', game)

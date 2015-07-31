@@ -19,11 +19,13 @@ def consume(first_letter):
         from time import sleep
         sleep(1)
 
+
 def get_all_active_players():
     for first_letter in ascii_uppercase:
         consume(first_letter)
         print 'done %s' % first_letter
 
-if __name__ == '__main__':
+
+def scrape():
     for letter in ascii_uppercase:
         consume(letter)
