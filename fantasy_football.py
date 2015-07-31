@@ -25,6 +25,7 @@ KICK_COLS = ['kick_ret', 'kick_ret_yds', 'kick_ret_ypa', 'kick_ret_td']
 PUNT_COLS = ['punt_ret', 'punt_ret_yds', 'punt_ret_ypa', 'punt_ret_td']
 PUNTING_COLS = ['punts', 'yards', 'yards_per_punt', 'blocked']
 SCORING_COLS = ['two_pt_con', 'pts']
+INTERCEPTION_COLS = ['int', 'int_yds', 'int_td']
 
 
 def get_active_players(first_letter):
@@ -89,6 +90,8 @@ def _get_active_columns(columns, sub_columns):
             active_columns.extend(TACKLE_COLS)
         if col == 'Punting':
             active_columns.extend(PUNTING_COLS)
+        if col == 'Def Interceptions':
+            active_columns.extend(INTERCEPTION_COLS)
 
     if 'Pts' in sub_columns and 'Scoring' not in columns:
         spot = sub_columns.index('Pts')
@@ -101,6 +104,11 @@ def _get_active_columns(columns, sub_columns):
     if 'GS' in sub_columns:
         spot = sub_columns.index('GS')
         active_columns.insert(spot + 1, 'games_started')
+
+    for field in ['XPM', 'XPA', 'XP%', 'FGM', 'FGA', 'FG%']:
+        if field in sub_columns:
+            spot = sub_columns.index(field)
+            active_columns.insert(spot + 1, field)
 
     return active_columns
 
@@ -128,7 +136,6 @@ def parse_game_log(gamelog_url):
     parsed_log = \
         _parse_table_response(parsed[0].findAll('td'),
                               _get_active_columns(headers, sub_headers))
-
     # Don't return the last row as that has summary information
     return parsed_log[0:len(parsed_log) - 1]
 
