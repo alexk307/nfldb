@@ -48,3 +48,23 @@ class DatabaseHandler():
                  escape(position),
                  escape(url))
         return self._execute_query(query)
+
+    def get_game(self, game_id):
+        query = """SELECT * FROM games WHERE id = '%s'""" % game_id
+        cur = self._db.cursor()
+        cur.execute(query)
+        results = cur.fetchone()
+        return dict(zip(map(lambda x: x[0], cur.description), results))
+
+    def get_games_by_player(self, player_id):
+        query = """SELECT games.id FROM games JOIN players p ON p.id = games.player_id WHERE p.id = %s""" % player_id
+        cur = self._db.cursor()
+        cur.execute(query)
+        return map(lambda x: int(x[0]), cur.fetchall())
+
+    def get_name_by_player_id(self, player_id):
+        query = """SELECT first_name, last_name FROM players WHERE id = %s""" % player_id
+        cur = self._db.cursor()
+        cur.execute(query)
+        name = cur.fetchone()
+        return "%s %s" % (name[0], name[1])
