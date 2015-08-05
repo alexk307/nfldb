@@ -56,8 +56,10 @@ class DatabaseHandler():
         results = cur.fetchone()
         return dict(zip(map(lambda x: x[0], cur.description), results))
 
-    def get_games_by_player(self, player_id):
+    def get_games_by_player(self, player_id, year=None):
         query = """SELECT games.id FROM games JOIN players p ON p.id = games.player_id WHERE p.id = %s""" % player_id
+        if year:
+            query += """ AND year >= %s""" % year
         cur = self._db.cursor()
         cur.execute(query)
         return map(lambda x: int(x[0]), cur.fetchall())
@@ -68,3 +70,9 @@ class DatabaseHandler():
         cur.execute(query)
         name = cur.fetchone()
         return "%s %s" % (name[0], name[1])
+
+    def get_all_player_ids(self):
+        query = """SELECT id FROM players"""
+        cur = self._db.cursor()
+        cur.execute(query)
+        return map(lambda x: int(x[0]), cur.fetchall())
